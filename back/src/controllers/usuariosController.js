@@ -5,6 +5,7 @@ import {
   actualizarUsuario,
   eliminarUsuario
 } from "../services/usuariosService.js";
+import bcrypt from "bcrypt"
 
 export const getUsuarios = async (req, res) => {
   try {
@@ -36,6 +37,10 @@ export const actualizar_usuario = async (req, res) => {
 
 export const createUsers = async (req, res) => {
   try {
+    let salt = await bcrypt.genSalt(10)
+    let password = await bcrypt.hash(req.body.password,salt)
+    req.body.password = password
+    console.log(req.body)
     let response = await createNew(req.body);
     res.json({ success: true, data: response });
   } catch (error) {

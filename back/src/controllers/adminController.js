@@ -5,9 +5,14 @@ import {
   removeAdmin,
   updateAdmin,
 } from "../services/adminService.js";
+import bcrypt from "bcrypt";
 
 export const newAdmin = async (req, res) => {
   try {
+    let salt = await bcrypt.genSalt(10);
+    let password = await bcrypt.hash(req.body.password, salt);
+    req.body.password = password;
+    console.log("admin===>", req.body)
     let response = await createAdmin(req.body);
     res.json(response);
   } catch (error) {
